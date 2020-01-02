@@ -52,7 +52,7 @@ class CSRNetDataset(Dataset):
     def __getitem__(self, index):
         assert index <= len(self), 'index range error'
         img_name = self.img_names[index]
-        img = plt.imread(os.path.join(self.img_root, img_name))
+        img = plt.imread(os.path.join(self.img_root, img_name)) / 255.0
         if len(img.shape) == 2:  # expand grayscale image to three channel.
             img = img[:, :, np.newaxis]
             img = np.concatenate((img, img, img), 2)
@@ -65,8 +65,8 @@ class CSRNetDataset(Dataset):
         if self.gt_downsample > 1:  # to downsample image and density-map to match deep-model.
             ds_rows = int(img.shape[0] // self.gt_downsample)
             ds_cols = int(img.shape[1] // self.gt_downsample)
-            img = cv2.resize(img, (ds_cols * self.gt_downsample, ds_rows * self.gt_downsample))
-            gt_dmap = cv2.resize(gt_dmap, (ds_cols, ds_rows))
+            img = cv2.resize(img, (ds_cols * self.gt_downsample, ds_rows * self.gt_downsample), interpolation=cv2.INTER_CUBIC)
+            gt_dmap = cv2.resize(gt_dmap, (ds_cols, ds_rows), interpolation=cv2.INTER_CUBIC)
             gt_dmap = gt_dmap[np.newaxis, :, :] * self.gt_downsample * self.gt_downsample
 
         img = img.transpose((2, 0, 1))
