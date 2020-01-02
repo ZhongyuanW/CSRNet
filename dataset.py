@@ -59,8 +59,8 @@ class CSRNetDataset(Dataset):
 
         gt_dmap = np.load(os.path.join(self.gt_dmap_root, img_name.replace('.jpg', '.npy')))
 
-        if self.phase=="train":
-            img, gt_dmap = random_crop(img, gt_dmap, CROP_DOWNSAMPLE)
+        # if self.phase=="train":
+        #     img, gt_dmap = random_crop(img, gt_dmap, CROP_DOWNSAMPLE)
 
         if self.gt_downsample > 1:  # to downsample image and density-map to match deep-model.
             ds_rows = int(img.shape[0] // self.gt_downsample)
